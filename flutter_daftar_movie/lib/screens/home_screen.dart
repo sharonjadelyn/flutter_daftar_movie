@@ -65,6 +65,20 @@ Widget _buildMoviesList(String title, List<Movie> movies) {
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
+      SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: movies.length,
+          itemBuilder: (BuildContext context, int index) {
+            final Movie movie = movies[index];
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: []),
+            );
+          },
+        ),
+      ),
     ],
   );
 }
