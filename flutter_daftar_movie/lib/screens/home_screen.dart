@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_daftar_movie/models/movie.dart';
+import 'package:flutter_daftar_movie/screens/detail_screen.dart';
 import 'package:flutter_daftar_movie/services/api_services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,38 +48,69 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [_buildMoviesList('All Movies', _allMovies)],
+          children: [
+            _buildMoviesList('All Movies', _allMovies),
+            _buildMoviesList('Trending Movies', _trendingMovies),
+            _buildMoviesList('Popular Movies', _popularMovies),
+          ],
         ),
       ),
     );
   }
-}
 
-Widget _buildMoviesList(String title, List<Movie> movies) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  Widget _buildMoviesList(String title, List<Movie> movies) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      SizedBox(
-        height: 200,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: movies.length,
-          itemBuilder: (BuildContext context, int index) {
-            final Movie movie = movies[index];
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(children: []),
-            );
-          },
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: movies.length,
+            itemBuilder: (BuildContext context, int index) {
+              final Movie movie = movies[index];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    // Handle movie tap, e.g., navigate to details page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(movie: movie),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Image.network(
+                        'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                        height: 150,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        movie.title.length > 14
+                            ? '${movie.title.substring(0, 10)}...'
+                            : movie.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }
